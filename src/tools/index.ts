@@ -1,7 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { registerBoardTools } from './boards.js';
-import { registerListTools } from './lists.js';
-import { registerCardTools } from './cards.js';
+import { registerBoardTools } from './boards';
+import { registerListTools } from './lists';
+import { registerCardTools } from './cards';
 
 export function registerTools(server: McpServer): void {
   registerBoardTools(server);

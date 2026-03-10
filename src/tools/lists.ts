@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { apiRequest } from '../api.js';
+import { apiRequest } from '../api';
 
 export function registerListTools(server: McpServer): void {
   server.tool(

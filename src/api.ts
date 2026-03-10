@@ -1,4 +1,4 @@
-import { getAuthHeader } from './auth.js';
+import { getAuthHeader } from './auth';
 
 export async function apiRequest<T>(
   method: string,
