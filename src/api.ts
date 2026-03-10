@@ -57,6 +57,6 @@ export async function apiRequest<T>(
     throw new Error(errorMessage);
   }
 
-  const json = (await response.json()) as { data: T };
-  return json.data;
+  const json = (await response.json()) as { data?: T };
+  return (json.data !== undefined ? json.data : json) as T;
 }
