@@ -1,0 +1,186 @@
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { z } from 'zod';
+import { apiRequest } from '../api.js';
+
+export function registerCardTools(server: McpServer): void {
+  server.tool(
+    'list_cards',
+    'List all cards in a board.',
+    {
+      board_id: z.string().describe('Board ID'),
+    },
+    async ({ board_id }) => {
+      try {
+        const data = await apiRequest('GET', `/api/v1/boards/${encodeURIComponent(board_id)}/cards`);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'get_card',
+    'Get a card by ID.',
+    {
+      card_id: z.string().describe('Card ID'),
+    },
+    async ({ card_id }) => {
+      try {
+        const data = await apiRequest('GET', `/api/v1/cards/${encodeURIComponent(card_id)}`);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'create_card',
+    'Create a new card in a list.',
+    {
+      list_id: z.string().describe('List ID'),
+      title: z.string().describe('Card title'),
+      description: z.string().optional().describe('Card description'),
+      type: z.string().optional().describe('Card type'),
+      priority: z.string().optional().describe('Card priority'),
+      severity: z.string().optional().describe('Card severity'),
+      effort: z.string().optional().describe('Card effort estimate'),
+      tags: z.array(z.string()).optional().describe('Card tags'),
+      due_date: z.string().optional().describe('Due date (ISO 8601)'),
+      responsible: z.string().optional().describe('Responsible person'),
+      prompt: z.string().optional().describe('AI prompt associated with the card'),
+      ai_tool: z.string().optional().describe('AI tool used'),
+    },
+    async ({ list_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool }) => {
+      try {
+        const data = await apiRequest('POST', '/api/v1/cards', {
+          list_id,
+          title,
+          description,
+          type,
+          priority,
+          severity,
+          effort,
+          tags,
+          due_date,
+          responsible,
+          prompt,
+          ai_tool,
+        });
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'update_card',
+    'Update an existing card.',
+    {
+      card_id: z.string().describe('Card ID'),
+      title: z.string().optional().describe('New card title'),
+      description: z.string().optional().describe('New card description'),
+      type: z.string().optional().describe('Card type'),
+      priority: z.string().optional().describe('Card priority'),
+      severity: z.string().optional().describe('Card severity'),
+      effort: z.string().optional().describe('Card effort estimate'),
+      tags: z.array(z.string()).optional().describe('Card tags'),
+      due_date: z.string().optional().describe('Due date (ISO 8601)'),
+      responsible: z.string().optional().describe('Responsible person'),
+      prompt: z.string().optional().describe('AI prompt associated with the card'),
+      ai_tool: z.string().optional().describe('AI tool used'),
+    },
+    async ({ card_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool }) => {
+      try {
+        const data = await apiRequest(
+          'PATCH',
+          `/api/v1/cards/${encodeURIComponent(card_id)}`,
+          { title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool }
+        );
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'move_card',
+    'Move a card to a different list and/or position.',
+    {
+      card_id: z.string().describe('Card ID'),
+      list_id: z.string().describe('Target list ID'),
+      position: z.number().int().min(0).describe('Position in the target list (0-based)'),
+    },
+    async ({ card_id, list_id, position }) => {
+      try {
+        const data = await apiRequest(
+          'PATCH',
+          `/api/v1/cards/${encodeURIComponent(card_id)}/move`,
+          { list_id, position }
+        );
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'archive_card',
+    'Archive a card.',
+    {
+      card_id: z.string().describe('Card ID'),
+    },
+    async ({ card_id }) => {
+      try {
+        const data = await apiRequest(
+          'POST',
+          `/api/v1/cards/${encodeURIComponent(card_id)}/archive?action=archive`
+        );
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+
+  server.tool(
+    'delete_card',
+    'Delete a card by ID.',
+    {
+      card_id: z.string().describe('Card ID'),
+    },
+    async ({ card_id }) => {
+      try {
+        const data = await apiRequest('DELETE', `/api/v1/cards/${encodeURIComponent(card_id)}`);
+        return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
+      } catch (err) {
+        return {
+          content: [{ type: 'text' as const, text: `Error: ${(err as Error).message}` }],
+          isError: true,
+        };
+      }
+    }
+  );
+}
