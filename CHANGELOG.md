@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-10
+
+### Added
+
+- **`job_number` field** — `create_card` and `update_card` now accept a job number (e.g. `C-20-0001`)
+- **`rating` field** — `create_card` and `update_card` now accept a rating from 1 to 5
+- **`links` field** — `create_card` and `update_card` now accept an array of `{ label, url }` objects
+- **`checklist` field** — `create_card` and `update_card` now accept an array of `{ id, text, checked }` checklist items
+- **Card fields documentation** — README now includes a complete table of all fields supported by `create_card` and `update_card`
+
+### Fixed
+
+- **`delete_card`, `delete_list`, `delete_board`, `archive_card`** — MCP response was malformed when pix3lboard returned `{ success: true }` without a `data` wrapper; `apiRequest` now falls back to the full response body when `data` is undefined
+
+---
+
 ## [1.0.0] - 2026-03-10
 
 ### Added

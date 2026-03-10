@@ -1,6 +1,6 @@
 {
   "name": "pix3lmcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "build:docker": "esbuild server.ts --bundle --platform=node --target=node22 --outfile=dist/server.js --packages=external",
