@@ -43,7 +43,7 @@ MCP server for [Pix3lboard](https://github.com/Pix3ltools-lab/pix3lboard) — ex
 | `responsible` | string | Responsible person |
 | `job_number` | string | Job number (e.g. `C-20-0001`) |
 | `rating` | number | Rating from 1 to 5 |
-| `links` | `{ label: string, url: string }[]` | Links associated with the card |
+| `links` | `string[]` | Links associated with the card (array of URLs) |
 | `checklist` | `{ id: string, text: string, checked: boolean }[]` | Checklist items |
 | `prompt` | string | AI prompt associated with the card |
 | `ai_tool` | string | AI tool used |

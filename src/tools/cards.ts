@@ -71,7 +71,7 @@ export function registerCardTools(server: McpServer): void {
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
       rating: jsonRating.optional().describe('Rating (1-5)'),
-      links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
+      links: jsonArray(z.array(z.string().url())).optional().describe('Links associated with the card (array of URLs)'),
       checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
     async ({ list_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
@@ -122,7 +122,7 @@ export function registerCardTools(server: McpServer): void {
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
       rating: jsonRating.optional().describe('Rating (1-5)'),
-      links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
+      links: jsonArray(z.array(z.string().url())).optional().describe('Links associated with the card (array of URLs)'),
       checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
     async ({ card_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
