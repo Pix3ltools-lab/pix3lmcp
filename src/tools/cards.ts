@@ -60,8 +60,9 @@ export function registerCardTools(server: McpServer): void {
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
       rating: z.number().int().min(1).max(5).optional().describe('Rating (1-5)'),
       links: z.array(z.object({ label: z.string(), url: z.string() })).optional().describe('Links associated with the card'),
+      checklist: z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() })).optional().describe('Checklist items'),
     },
-    async ({ list_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links }) => {
+    async ({ list_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
       try {
         const data = await apiRequest('POST', '/api/v1/cards', {
           list_id,
@@ -79,6 +80,7 @@ export function registerCardTools(server: McpServer): void {
           job_number,
           rating,
           links,
+          checklist,
         });
         return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
       } catch (err) {
@@ -109,13 +111,14 @@ export function registerCardTools(server: McpServer): void {
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
       rating: z.number().int().min(1).max(5).optional().describe('Rating (1-5)'),
       links: z.array(z.object({ label: z.string(), url: z.string() })).optional().describe('Links associated with the card'),
+      checklist: z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() })).optional().describe('Checklist items'),
     },
-    async ({ card_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links }) => {
+    async ({ card_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
       try {
         const data = await apiRequest(
           'PATCH',
           `/api/v1/cards/${encodeURIComponent(card_id)}`,
-          { title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links }
+          { title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }
         );
         return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
       } catch (err) {

@@ -18,11 +18,35 @@ MCP server for [Pix3lboard](https://github.com/Pix3ltools-lab/pix3lboard) — ex
 | `delete_list` | Delete a list |
 | `list_cards` | List all cards in a board |
 | `get_card` | Get card details |
-| `create_card` | Create a new card |
-| `update_card` | Update a card |
+| `create_card` | Create a new card (see [Card fields](#card-fields)) |
+| `update_card` | Update a card (see [Card fields](#card-fields)) |
 | `move_card` | Move a card to a different list/position |
 | `archive_card` | Archive a card |
 | `delete_card` | Delete a card |
+
+---
+
+## Card fields
+
+`create_card` and `update_card` support the following fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `title` | string | Card title |
+| `description` | string | Card description |
+| `type` | string | Card type (`task`, `bug`, `feature`, `meeting`, `text`) |
+| `priority` | string | Priority level |
+| `severity` | string | Severity level |
+| `effort` | string | Effort estimate |
+| `tags` | string[] | List of tags |
+| `due_date` | string | Due date in ISO 8601 format |
+| `responsible` | string | Responsible person |
+| `job_number` | string | Job number (e.g. `C-20-0001`) |
+| `rating` | number | Rating from 1 to 5 |
+| `links` | `{ label: string, url: string }[]` | Links associated with the card |
+| `checklist` | `{ id: string, text: string, checked: boolean }[]` | Checklist items |
+| `prompt` | string | AI prompt associated with the card |
+| `ai_tool` | string | AI tool used |
 
 ---
 
