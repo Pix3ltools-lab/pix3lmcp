@@ -2,6 +2,18 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { apiRequest } from '../api';
 
+// MCP transport may serialize arrays/numbers as JSON strings — parse them back
+const jsonArray = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((val) => {
+    if (typeof val === 'string') { try { return JSON.parse(val); } catch { return val; } }
+    return val;
+  }, schema);
+
+const jsonNumber = z.preprocess((val) => {
+  if (typeof val === 'string') { const n = Number(val); return isNaN(n) ? val : n; }
+  return val;
+}, z.number());
+
 export function registerCardTools(server: McpServer): void {
   server.tool(
     'list_cards',
@@ -52,15 +64,15 @@ export function registerCardTools(server: McpServer): void {
       priority: z.string().optional().describe('Card priority'),
       severity: z.string().optional().describe('Card severity'),
       effort: z.string().optional().describe('Card effort estimate'),
-      tags: z.array(z.string()).optional().describe('Card tags'),
+      tags: jsonArray(z.array(z.string())).optional().describe('Card tags'),
       due_date: z.string().optional().describe('Due date (ISO 8601)'),
       responsible: z.string().optional().describe('Responsible person'),
       prompt: z.string().optional().describe('AI prompt associated with the card'),
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
-      rating: z.number().int().min(1).max(5).optional().describe('Rating (1-5)'),
-      links: z.array(z.object({ label: z.string(), url: z.string() })).optional().describe('Links associated with the card'),
-      checklist: z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() })).optional().describe('Checklist items'),
+      rating: jsonNumber.int().min(1).max(5).optional().describe('Rating (1-5)'),
+      links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
+      checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
     async ({ list_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
       try {
@@ -103,15 +115,15 @@ export function registerCardTools(server: McpServer): void {
       priority: z.string().optional().describe('Card priority'),
       severity: z.string().optional().describe('Card severity'),
       effort: z.string().optional().describe('Card effort estimate'),
-      tags: z.array(z.string()).optional().describe('Card tags'),
+      tags: jsonArray(z.array(z.string())).optional().describe('Card tags'),
       due_date: z.string().optional().describe('Due date (ISO 8601)'),
       responsible: z.string().optional().describe('Responsible person'),
       prompt: z.string().optional().describe('AI prompt associated with the card'),
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
-      rating: z.number().int().min(1).max(5).optional().describe('Rating (1-5)'),
-      links: z.array(z.object({ label: z.string(), url: z.string() })).optional().describe('Links associated with the card'),
-      checklist: z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() })).optional().describe('Checklist items'),
+      rating: jsonNumber.int().min(1).max(5).optional().describe('Rating (1-5)'),
+      links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
+      checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
     async ({ card_id, title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }) => {
       try {
