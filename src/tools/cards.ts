@@ -9,10 +9,10 @@ const jsonArray = <T extends z.ZodTypeAny>(schema: T) =>
     return val;
   }, schema);
 
-const jsonNumber = z.preprocess((val) => {
+const jsonRating = z.preprocess((val) => {
   if (typeof val === 'string') { const n = Number(val); return isNaN(n) ? val : n; }
   return val;
-}, z.number());
+}, z.number().int().min(1).max(5));
 
 export function registerCardTools(server: McpServer): void {
   server.tool(
@@ -70,7 +70,7 @@ export function registerCardTools(server: McpServer): void {
       prompt: z.string().optional().describe('AI prompt associated with the card'),
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
-      rating: jsonNumber.int().min(1).max(5).optional().describe('Rating (1-5)'),
+      rating: jsonRating.optional().describe('Rating (1-5)'),
       links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
       checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
@@ -121,7 +121,7 @@ export function registerCardTools(server: McpServer): void {
       prompt: z.string().optional().describe('AI prompt associated with the card'),
       ai_tool: z.string().optional().describe('AI tool used'),
       job_number: z.string().optional().describe('Job number (e.g. C-20-0001)'),
-      rating: jsonNumber.int().min(1).max(5).optional().describe('Rating (1-5)'),
+      rating: jsonRating.optional().describe('Rating (1-5)'),
       links: jsonArray(z.array(z.object({ label: z.string(), url: z.string() }))).optional().describe('Links associated with the card'),
       checklist: jsonArray(z.array(z.object({ id: z.string(), text: z.string(), checked: z.boolean() }))).optional().describe('Checklist items'),
     },
