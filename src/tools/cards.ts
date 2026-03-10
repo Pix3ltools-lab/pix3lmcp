@@ -60,7 +60,7 @@ export function registerCardTools(server: McpServer): void {
       list_id: z.string().describe('List ID'),
       title: z.string().describe('Card title'),
       description: z.string().optional().describe('Card description'),
-      type: z.string().optional().describe('Card type'),
+      type: z.string().optional().describe('Card type (e.g. task, bug, feature, meeting, text, image, music, video — always lowercase)'),
       priority: z.string().optional().describe('Card priority'),
       severity: z.string().optional().describe('Card severity'),
       effort: z.string().optional().describe('Card effort estimate'),
@@ -80,7 +80,7 @@ export function registerCardTools(server: McpServer): void {
           list_id,
           title,
           description,
-          type,
+          type: type?.toLowerCase(),
           priority,
           severity,
           effort,
@@ -111,7 +111,7 @@ export function registerCardTools(server: McpServer): void {
       card_id: z.string().describe('Card ID'),
       title: z.string().optional().describe('New card title'),
       description: z.string().optional().describe('New card description'),
-      type: z.string().optional().describe('Card type'),
+      type: z.string().optional().describe('Card type (e.g. task, bug, feature, meeting, text, image, music, video — always lowercase)'),
       priority: z.string().optional().describe('Card priority'),
       severity: z.string().optional().describe('Card severity'),
       effort: z.string().optional().describe('Card effort estimate'),
@@ -130,7 +130,7 @@ export function registerCardTools(server: McpServer): void {
         const data = await apiRequest(
           'PATCH',
           `/api/v1/cards/${encodeURIComponent(card_id)}`,
-          { title, description, type, priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }
+          { title, description, type: type?.toLowerCase(), priority, severity, effort, tags, due_date, responsible, prompt, ai_tool, job_number, rating, links, checklist }
         );
         return { content: [{ type: 'text' as const, text: JSON.stringify(data, null, 2) }] };
       } catch (err) {
