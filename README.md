@@ -2,6 +2,10 @@
 
 MCP server for [Pix3lboard](https://github.com/Pix3ltools-lab/pix3lboard) — exposes board, list, and card management as tools for Claude Code and Claude.ai via the [Model Context Protocol](https://modelcontextprotocol.io/).
 
+## Demo
+
+[![Watch the demo on YouTube](https://img.youtube.com/vi/IPVdeFDekFI/0.jpg)](https://www.youtube.com/watch?v=IPVdeFDekFI)
+
 ## Available Tools
 
 | Tool | Description |
